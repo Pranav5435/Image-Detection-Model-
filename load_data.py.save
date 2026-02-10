@@ -1,0 +1,57 @@
+import torch
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Define how to process images
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),      # Make all images 224x224
+    transforms.ToTensor(),              # Convert to numbers (0-1)
+    transforms.Normalize(               # Normalize for pre-trained models
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )
+])
+
+# Load the datasets
+train_dataset = datasets.ImageFolder('train', transform=transform)
+test_dataset = datasets.ImageFolder('test', transform=transform)
+
+# Create dataloaders (handles batching)
+train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+
+# Print what we loaded
+print(f"Training images: {len(train_dataset)}")
+print(f"Test images: {len(test_dataset)}")
+print(f"Classes: {train_dataset.classes}")
+
+# Display some sample images
+def show_images():
+    images, labels = next(iter(train_loader))
+    
+    fig, axes = plt.subplots(2, 4, figsize=(12, 6))
+    axes = axes.flatten()
+    
+    for idx in range(8):
+        img = images[idx].numpy().transpose(1, 2, 0)
+        
+        # Denormalize to see the image properly
+        mean = np.array([0.485, 0.456, 0.406])
+        std = np.array([0.229, 0.224, 0.225])
+        img = std * img + mean
+        img = np.clip(img, 0, 1)
+        
+        axes[idx].imshow(img)
+        axes[idx].set_title(f"Label: {train_dataset.classes[labels[idx]]}")
+        axes[idx].axis('off')
+    
+    plt.tight_layout()
+    plt.savefig('sample_images.png')
+    print("\nSaved sample images to 'sample_images.png'")
+
+show_images()
+print("\nData loading successful! ✓")
+y
+

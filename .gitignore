@@ -1,0 +1,19 @@
+# Datasets (too large for GitHub)
+train/
+test/
+*.zip
+
+# Model checkpoints
+*.pth
+*.pkl
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Images
+sample_images.png
+
+# Mac
+.DS_Store
